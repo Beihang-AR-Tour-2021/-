@@ -18,6 +18,11 @@ public class CustomerService extends ServiceImpl<CustomerMapper, Customer> {
      * @return 0代表验证通过，1代表用户不存在，2代表密码错误
      */
     public int verify(String phone, String password) {
+        /**
+         * 用法
+         * QueryWrapper<表名> 对象 = new QueryWrapper();
+         * https://www.cnblogs.com/zhaoyunlong/p/10853543.html
+         */
         QueryWrapper<Customer> wrapper = new QueryWrapper<>();
         /*
         SELECT *
@@ -26,9 +31,11 @@ public class CustomerService extends ServiceImpl<CustomerMapper, Customer> {
          */
         wrapper.eq("phone", phone);
         Customer customer = getOne(wrapper);
+        // 判断是否存在对应用户
         if (customer == null) {
             return 1;
         } else {
+
             wrapper.eq("password", password);
             customer = getOne(wrapper);
             if (customer == null) return 2;

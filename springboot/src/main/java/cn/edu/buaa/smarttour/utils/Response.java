@@ -4,6 +4,7 @@ import java.util.Date;
 
 public class Response {
 
+    //返回数据封装
     private int code;
     private String message;
     private Object data;
