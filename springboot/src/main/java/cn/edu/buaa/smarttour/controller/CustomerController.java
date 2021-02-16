@@ -28,6 +28,7 @@ public class CustomerController {
             @ApiImplicitParam(name = "phone",value = "用户的手机号",required = true,paramType = "body",dataType = "String"),
             @ApiImplicitParam(name = "password",value = "账户密码",required = true,paramType = "body",dataType = "String")
     })
+    // phone获取手机号，password获取密码，通过verify方法判断是否登陆成功
     public ResponseEntity<Response> verify(@RequestBody Map<String, Object> body) {
         int code = customerService.verify((String) body.get("phone"), (String) body.get("password"));
         switch (code) {
