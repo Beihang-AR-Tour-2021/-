@@ -1,6 +1,0 @@
-spring:
-  datasource:
-    driver-class-name: com.mysql.cj.jdbc.Driver
-    url: jdbc:mysql://49.232.106.208:3306/artour
-    username: root
-    password: Beih@ng2020
