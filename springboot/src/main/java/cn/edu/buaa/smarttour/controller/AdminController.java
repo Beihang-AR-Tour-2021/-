@@ -22,7 +22,7 @@ public class AdminController {
     @GetMapping("/zone")
     @ApiOperation("/景区管理操作")
     public Map<String, Object> getAllSpots(){
-
+        return null;
     }
 
 }
