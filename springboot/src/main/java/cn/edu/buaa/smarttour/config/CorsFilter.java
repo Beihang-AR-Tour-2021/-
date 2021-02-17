@@ -8,6 +8,7 @@ import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 import java.io.IOException;
 
+// 解决跨域问题
 @Slf4j
 @Component
 public class CorsFilter implements Filter {

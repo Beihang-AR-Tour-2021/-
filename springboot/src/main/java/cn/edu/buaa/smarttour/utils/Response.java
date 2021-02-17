@@ -38,6 +38,16 @@ public class Response {
         this.time = new Date();
     }
 
+    @Override
+    public String toString() {
+        return "Response{" +
+                "\ncode=" + code +
+                "\n, message='" + message + '\'' +
+                "\n, data=" + data +
+                "\n, time=" + time +
+                '}';
+    }
+
     public int getCode() {
         return code;
     }
