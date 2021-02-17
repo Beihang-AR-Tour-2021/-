@@ -6,11 +6,9 @@ import cn.edu.buaa.smarttour.model.Zone;
 import cn.edu.buaa.smarttour.service.AdminService;
 import cn.edu.buaa.smarttour.utils.Response;
 import com.baomidou.mybatisplus.core.conditions.query.QueryWrapper;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -26,16 +24,12 @@ import java.util.Map;
 public class AdminController {
 
     private AdminService adminService;
-    @Autowired
-    private ZoneMapper zoneMapper;
 
     @GetMapping("/zone")
-    @ApiOperation("/获取所有景区信息")
+    @ApiOperation("获取所有景区信息")
     public Map<String, Object> getAllZones(){
         Map<String, Object> map = new HashMap<>();
-        List<Zone> zonelist = new ArrayList<Zone>();
-        AdminService adminService = new AdminService(zoneMapper);
-        zonelist = adminService.allZones();
+        List<Zone> zonelist = adminService.allZones();
         if(zonelist == null){
             map.put("response", "failed");
             map.put("msg", "get all zones failed");
@@ -48,36 +42,28 @@ public class AdminController {
     }
 
     @PostMapping("/zone")
-    @ApiOperation("/添加新的景区")
-    @ApiImplicitParams({
-
+    @ApiOperation("添加新的景区")
+    @ApiResponses(value = {
+            @ApiResponse(code = 1001, message = "添加成功！"),
+            @ApiResponse(code = 1004, message = "添加景区失败")
     })
-    public Map<String, Object> addNewZones(Zone zone){
-        Map<String, Object> map = new HashMap<>();
-        AdminService adminService = new AdminService(zoneMapper);
-        int result = adminService.addZone(zone);
-        if(result <= 0){
-            map.put("response", "failed");
-            map.put("msg", "add zone failed.");
-            return map;
-        }
-        else{
-            map.put("response", "success");
-            map.put("msg", "add zone successful.");
-            return map;
+    // 添加景区时，前端不提供zid，于是需要新的实体来接收，一般用静态内部类即可
+    public ResponseEntity<Response> addNewZones(@RequestBody ZoneEntity zoneEntity){
+        Zone zone = new Zone(null, zoneEntity.getName(), zoneEntity.getInfo(), zoneEntity.getAddress(), zoneEntity.getTime(), zoneEntity.getPhoto_url());
+        boolean result = adminService.addZone(zone);
+        if (result) {
+            return ResponseEntity.ok(new Response("添加成功！"));
+        } else{
+            return ResponseEntity.ok(new Response(1004, "添加景区失败"));
         }
     }
 
     @PutMapping("/zone")
-    @ApiOperation("/修改景区信息")
-    @ApiImplicitParams({
-
-    })
-    public Map<String, Object> editZone(Zone zone){
+    @ApiOperation("修改景区信息")
+    public Map<String, Object> editZone(@RequestBody Zone zone){
         Map<String, Object> map = new HashMap<>();
-        AdminService adminService = new AdminService(zoneMapper);
-        int res = adminService.editZone(zone);
-        if(res <= 0){
+        boolean res = adminService.editZone(zone);
+        if(res){
             map.put("response", "failed");
             map.put("msg", "edit zone failed.");
             return map;
@@ -89,15 +75,16 @@ public class AdminController {
         }
     }
 
-    @DeleteMapping("/zone")
-    @ApiOperation("/删除景区")
+    @DeleteMapping("/zone/{id}")
+    @ApiOperation("删除景区")
     @ApiImplicitParams({
-
+            @ApiImplicitParam(name="id",value="景区id",dataType="Long",paramType = "path",example="1")
     })
-    public Map<String, Object> deleteZone(Zone zone){
+    // 删除景区只需知道它的id，在路径中传id即可
+    public Map<String, Object> deleteZone(@PathVariable("id") Long id){
         Map<String, Object> map = new HashMap<>();
-        int res = adminService.deleteZone(zone);
-        if(res <= 0){
+        boolean res = adminService.deleteZone(id);
+        if(res){
             map.put("response", "failed");
             map.put("msg", "edit zone failed.");
             return map;
@@ -107,6 +94,22 @@ public class AdminController {
             map.put("msg", "edit zone successful.");
             return map;
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    @ApiModel(value = "ZoneEntity")
+    static class ZoneEntity {
+        @ApiModelProperty(name = "name", value = "景区名称", required = true, example = "String")
+        private String name;
+        @ApiModelProperty(name = "info", value = "景区简介", required = true, example = "String")
+        private String info;
+        @ApiModelProperty(name = "address", value = "景区地址", required = true, example = "String")
+        private String address;
+        @ApiModelProperty(name = "time", value = "开发时间", required = true, example = "String")
+        private String time;
+        @ApiModelProperty(name = "photo_url", value = "实景链接", required = true, example = "String")
+        private String photo_url;
     }
 
 }

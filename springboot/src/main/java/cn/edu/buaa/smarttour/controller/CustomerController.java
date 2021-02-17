@@ -3,11 +3,9 @@ package cn.edu.buaa.smarttour.controller;
 import cn.edu.buaa.smarttour.model.Customer;
 import cn.edu.buaa.smarttour.service.CustomerService;
 import cn.edu.buaa.smarttour.utils.Response;
-import io.swagger.annotations.Api;
-import io.swagger.annotations.ApiImplicitParam;
-import io.swagger.annotations.ApiImplicitParams;
-import io.swagger.annotations.ApiOperation;
+import io.swagger.annotations.*;
 import lombok.AllArgsConstructor;
+import lombok.Data;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -25,16 +23,12 @@ public class CustomerController {
 
     @PostMapping("/session")
     @ApiOperation("用户登录")
-    @ApiImplicitParams({
-            @ApiImplicitParam(name = "phone",value = "用户的手机号",required = true,paramType = "body",dataType = "String"),
-            @ApiImplicitParam(name = "password",value = "账户密码",required = true,paramType = "body",dataType = "String")
-    })
     // phone获取手机号，password获取密码，通过verify方法判断是否登陆成功
-    public ResponseEntity<Response> verify(@RequestBody Map<String, Object> body, HttpSession session) {
-        int code = customerService.verify((String) body.get("phone"), (String) body.get("password"));
+    public ResponseEntity<Response> verify(@RequestBody LoginEntity loginEntity, HttpSession session) {
+        int code = customerService.verify(loginEntity.getPhone(), loginEntity.getPassword());
         switch (code) {
             case 0:
-                Customer customer = customerService.getCustomerByPhone((String) body.get("phone"));
+                Customer customer = customerService.getCustomerByPhone(loginEntity.getPhone());
                 //设置session缓存
                 session.setAttribute("customer",customer);
                 return ResponseEntity.ok(new Response("登录成功！", customer));
@@ -56,6 +50,16 @@ public class CustomerController {
         }else{
             return ResponseEntity.ok(new Response(1003,"用户未登录",null));
         }
+    }
+
+    @Data
+    @AllArgsConstructor
+    @ApiModel(value = "LoginEntity", description = "用户登录表单")
+    static class LoginEntity {
+        @ApiModelProperty(name = "phone", value = "手机号", required = true, example = "String")
+        private String phone;
+        @ApiModelProperty(name = "password", value = "密码", required = true, example = "String")
+        private String password;
     }
 
 }
