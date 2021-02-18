@@ -18,17 +18,17 @@ public class adminTest {
     @Test
     public void verifyTest() {
         int code = customerService.verify("111", "12");
-        System.out.println(code);
+        // System.out.println(code);
     }
 
     @Test
     public void addZoneTest() {
         Zone zone = new Zone(null, "测试1", "11", "11", "11", "11");
-        System.out.println(adminService.addZone(zone));
+        // System.out.println(adminService.addZone(zone));
     }
 
     @Test
     public void deleteZoneTest() {
-        System.out.println(adminService.deleteZone(1L));
+        // System.out.println(adminService.deleteZone(1L));
     }
 }
