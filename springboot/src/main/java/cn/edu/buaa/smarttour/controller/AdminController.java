@@ -27,25 +27,20 @@ public class AdminController {
 
     @GetMapping("/zone")
     @ApiOperation("获取所有景区信息")
-    public Map<String, Object> getAllZones(){
+    public ResponseEntity<Response> getAllZones(){
         Map<String, Object> map = new HashMap<>();
         List<Zone> zonelist = adminService.allZones();
         if(zonelist == null){
-            map.put("response", "failed");
-            map.put("msg", "get all zones failed");
-            return map;
+            return ResponseEntity.ok(new Response(404, "查询所有景区失败！"));
         }
-        map.put("response", "success");
-        map.put("msg", "Search success");
-        map.put("info", zonelist);
-        return map;
+        return ResponseEntity.ok(new Response(zonelist));
     }
 
     @PostMapping("/zone")
     @ApiOperation("添加新的景区")
     @ApiResponses(value = {
             @ApiResponse(code = 1001, message = "添加成功！"),
-            @ApiResponse(code = 1004, message = "添加景区失败")
+            @ApiResponse(code = 404, message = "添加景区失败")
     })
     // 添加景区时，前端不提供zid，于是需要新的实体来接收，一般用静态内部类即可
     public ResponseEntity<Response> addNewZones(@RequestBody ZoneEntity zoneEntity){
@@ -54,24 +49,20 @@ public class AdminController {
         if (result) {
             return ResponseEntity.ok(new Response("添加成功！"));
         } else{
-            return ResponseEntity.ok(new Response(1004, "添加景区失败"));
+            return ResponseEntity.ok(new Response(404, "添加景区失败"));
         }
     }
 
     @PutMapping("/zone")
     @ApiOperation("修改景区信息")
-    public Map<String, Object> editZone(@RequestBody Zone zone){
+    public ResponseEntity<Response> editZone(@RequestBody Zone zone){
         Map<String, Object> map = new HashMap<>();
         boolean res = adminService.editZone(zone);
         if(res){
-            map.put("response", "failed");
-            map.put("msg", "edit zone failed.");
-            return map;
+            return ResponseEntity.ok(new Response("修改成功！"));
         }
         else{
-            map.put("response", "success");
-            map.put("msg", "edit zone successful.");
-            return map;
+            return ResponseEntity.ok(new Response(404, "修改景区失败"));
         }
     }
 
@@ -81,18 +72,14 @@ public class AdminController {
             @ApiImplicitParam(name="id",value="景区id",dataType="Long",paramType = "path",example="1")
     })
     // 删除景区只需知道它的id，在路径中传id即可
-    public Map<String, Object> deleteZone(@PathVariable("id") Long id){
+    public ResponseEntity<Response> deleteZone(@PathVariable("id") Long id){
         Map<String, Object> map = new HashMap<>();
         boolean res = adminService.deleteZone(id);
         if(res){
-            map.put("response", "failed");
-            map.put("msg", "edit zone failed.");
-            return map;
+            return ResponseEntity.ok(new Response("删除成功！"));
         }
         else{
-            map.put("response", "success");
-            map.put("msg", "edit zone successful.");
-            return map;
+            return ResponseEntity.ok(new Response(404, "删除景区失败"));
         }
     }
 
