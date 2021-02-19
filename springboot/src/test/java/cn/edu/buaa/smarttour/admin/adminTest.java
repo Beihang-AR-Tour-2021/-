@@ -31,4 +31,10 @@ public class adminTest {
     public void deleteZoneTest() {
         // System.out.println(adminService.deleteZone(1L));
     }
+
+    @Test
+    public void updateZoneTest() {
+        Zone zone = new Zone(2L, "测试1", "修改后v1", "11", "11", "11");
+        // System.out.println(adminService.editZone(zone));
+    }
 }
