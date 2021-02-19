@@ -4,3 +4,5 @@ spring:
     url: jdbc:mysql://49.232.106.208:3306/artour
     username: root
     password: Beih@ng2020
+server:
+  port: 8086

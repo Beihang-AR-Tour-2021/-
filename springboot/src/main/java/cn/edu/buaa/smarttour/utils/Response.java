@@ -11,7 +11,7 @@ public class Response {
     private Date time;
 
     public Response(Object data) {
-        this.code = 1001;
+        this.code = 200;
         this.message = "请求成功！";
         this.data = data;
         this.time = new Date();
@@ -25,7 +25,7 @@ public class Response {
     }
 
     public Response(String message, Object data) {
-        this.code = 1001;
+        this.code = 200;
         this.message = message;
         this.data = data;
         this.time = new Date();
