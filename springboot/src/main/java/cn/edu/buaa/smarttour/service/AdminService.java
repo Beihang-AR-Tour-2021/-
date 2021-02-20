@@ -51,7 +51,7 @@ public class AdminService extends ServiceImpl<ZoneMapper, Zone> {
 
         // AdminService继承了ServiceImpl之后增加了许多数据操作的方法
         // 可直接使用，文档见：https://mp.baomidou.com/guide/crud-interface.html
-        return updateById(editZone);
+        return update(updateWrapper);
     }
 
     /**
