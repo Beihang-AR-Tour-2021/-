@@ -55,4 +55,18 @@ public class CustomerService extends ServiceImpl<CustomerMapper, Customer> {
         return getOne(wrapper);
     }
 
+    /**
+     * 验证管理员口令信息
+     * @param name 管理员账户名
+     * @param password 密码
+     * @return 信息是否正确
+     */
+    public boolean adminLogin(String name, String password) {
+        QueryWrapper queryWrapper = new QueryWrapper();
+        queryWrapper.eq("phone", name);
+        queryWrapper.eq("password", password);
+        queryWrapper.eq("role", 0);
+        return getOne(queryWrapper) != null;
+    }
+
 }
