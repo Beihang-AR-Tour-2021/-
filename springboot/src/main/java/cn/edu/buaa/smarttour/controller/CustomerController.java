@@ -48,11 +48,20 @@ public class CustomerController {
         return ResponseEntity.ok(new Response(500, "服务器内部错误，请稍后再试", null));
     }
 
-    @GetMapping("/hello")
-    @RequiresRoles(value={"admin","user"}, logical = Logical.OR)
-    public Object hello() {
-        Customer principal = (Customer)SecurityUtils.getSubject().getPrincipal();
-        return principal;
+    @PostMapping("/user")
+    @ApiOperation("用户注册")
+    public ResponseEntity<Response> register(@RequestBody RegisterEntity info) {
+        Customer customer = customerService.getCustomerByPhone(info.phone);
+        if (customer == null) {
+            boolean status = customerService.save(new Customer(null, info.name, info.phone, info.password, 1, info.age, info.sex));
+            if (status) {
+                return ResponseEntity.ok(new Response("注册成功！", null));
+            } else {
+                return ResponseEntity.ok(new Response(500, "服务器内部错误，请稍后再试", null));
+            }
+        } else {
+            return ResponseEntity.ok(new Response(400, "账号已存在，请登录", null));
+        }
     }
 
     @DeleteMapping("/session")
@@ -75,10 +84,21 @@ public class CustomerController {
     @AllArgsConstructor
     @ApiModel(value = "LoginEntity", description = "用户登录表单")
     static class LoginEntity {
-        @ApiModelProperty(name = "phone", value = "手机号", required = true, example = "String")
+        @ApiModelProperty(name = "phone", value = "手机号", required = true, example = "test01")
         private String phone;
-        @ApiModelProperty(name = "password", value = "密码", required = true, example = "String")
+        @ApiModelProperty(name = "password", value = "密码", required = true, example = "a12345")
         private String password;
+    }
+
+    @Data
+    @AllArgsConstructor
+    @ApiModel(value = "RegisterEntity", description = "用户注册表单")
+    static class RegisterEntity {
+        private String name;
+        private String phone;
+        private String password;
+        private Integer age;
+        private Integer sex;
     }
 
 }
