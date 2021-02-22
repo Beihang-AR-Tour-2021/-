@@ -94,20 +94,6 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
         return super.preHandle(request, response);
     }
 
-    /**
-     * 将非法请求跳转到 /unauthorized/**
-     */
-    private void responseError(ServletResponse response, String message) {
-        try {
-            HttpServletResponse httpServletResponse = (HttpServletResponse) response;
-            //设置编码，否则中文字符在重定向时会变为空字符串
-            message = URLEncoder.encode(message, "UTF-8");
-            httpServletResponse.sendRedirect("/unauthorized/" + message);
-        } catch (IOException e) {
-            System.out.println(e.getMessage());
-        }
-    }
-
     /*
      * 这里的getBean是因为使用@Autowired无法把RedisUtil注入进来
      * 这样自动去注入当使用的时候是未NULL，是注入不进去了。通俗的来讲是因为拦截器在spring扫描bean之前加载所以注入不进去。
@@ -138,8 +124,8 @@ public class JWTFilter extends BasicHttpAuthenticationFilter {
                 long currentTimeMillis = System.currentTimeMillis();
                 //生成刷新的token
                 String token = JWTUtil.createToken(username,currentTimeMillis);
-                //刷新redis里面的refreshToken,过期时间是30min
-                redisUtil.set(username, currentTimeMillis, 30 * 60);
+                //刷新redis里面的refreshToken,过期时间是7天
+                redisUtil.set(username, currentTimeMillis, 7 * 24 * 60 * 60);
                 //再次交给shiro进行认证
                 JWTToken jwtToken = new JWTToken(token);
                 try {

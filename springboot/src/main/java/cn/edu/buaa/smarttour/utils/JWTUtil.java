@@ -13,7 +13,7 @@ import java.util.Map;
 public class JWTUtil {
 
     // token 有效时长
-    private static final long EXPIRE = 60 * 1000L;
+    private static final long EXPIRE = 7 * 24 * 60 * 60 * 1000L;
     private static final String SALT = "ARTour";
 
     public static String createToken(String phone, Long current) {

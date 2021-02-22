@@ -36,7 +36,7 @@ public class CustomerController {
                 Customer customer = customerService.getCustomerByPhone(loginEntity.getPhone());
                 long currentTimeMillis = System.currentTimeMillis();
                 String token = JWTUtil.createToken(customer.getPhone(), currentTimeMillis);
-                redisUtil.set(customer.getPhone(), currentTimeMillis, 60 * 30);
+                redisUtil.set(customer.getPhone(), currentTimeMillis, 7 * 24 * 60 * 60);
                 resMap.put("user", customer);
                 resMap.put("token", token);
                 return ResponseEntity.ok(new Response("登录成功！", resMap));

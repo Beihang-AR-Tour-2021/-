@@ -103,7 +103,7 @@ public class AdminController {
         if (customerService.adminLogin(loginEntity.name, loginEntity.password)) {
             long currentTimeMillis = System.currentTimeMillis();
             String token = JWTUtil.createToken(loginEntity.name, currentTimeMillis);
-            redisUtil.set(loginEntity.name, currentTimeMillis, 60 * 30);
+            redisUtil.set(loginEntity.name, currentTimeMillis, 7 * 24 * 60 * 60);
             Map<String, Object> res = new HashMap<>();
             res.put("token", token);
             return ResponseEntity.ok(new Response("登录成功！", res));
