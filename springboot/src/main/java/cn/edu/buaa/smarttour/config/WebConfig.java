@@ -8,7 +8,6 @@ import org.springframework.web.servlet.config.annotation.WebMvcConfigurer;
 /**
  * 拦截器配置
  */
-@Configuration
 public class WebConfig implements WebMvcConfigurer {
     //添加拦截器
     @Override

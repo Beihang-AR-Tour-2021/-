@@ -26,8 +26,7 @@ public class LoginInterceptor implements HandlerInterceptor {
      */
     @Override
     public boolean preHandle(HttpServletRequest request, HttpServletResponse response, Object handler) throws Exception {
-        return true;
-        /*
+
         String requestURI = request.getRequestURI();
         log.info("preHandle拦截的请求路径是{}", requestURI);
         //登录检查逻辑
@@ -53,7 +52,6 @@ public class LoginInterceptor implements HandlerInterceptor {
         out = response.getWriter();
         out.append(res.toString());
         return false;
-        */
     }
 
     /**
